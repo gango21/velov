@@ -11,7 +11,7 @@ $(function(){
     })
 })
 
-// Comment réutiliser stations[i].position dans ligne ???
+// Comment réutiliser stations[i].position dans ligne 36 addMarker addMarker({stations[i].position}) ???
 
 
 function initMap(){
@@ -23,7 +23,7 @@ function initMap(){
             //nouvelle carte
             var map = new google.maps.Map(document.getElementById('map'),options);
             
-
+            
             //Add Marker function
             function addMarker(coords){
                 var marker = new google.maps.Marker({
