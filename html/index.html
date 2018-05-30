@@ -5,17 +5,19 @@
 <head>
     <meta charset="utf-8">
     <title>Velov</title>
-    <style>
-        #map{
-            height: 400px;
-            width: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
     
 <body>
     <h1>Vélo'v</h1>
     <div id="map"></div>
+    <div id="etatstation">
+        <h2 id="nomStation"></h2>
+        <p>Adresse : <span id="adresse"></span></p>
+        <p>Nombre de places : <span id="nombreDePlaces"></span></p>
+        <p>Vélos disponibles : <span id="placesDisponibles"></span></p>
+        <p>Réserver</p>
+    </div>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdFj59goa62jO2ElaHUegBiK4RYk7Ai9s
 &callback=initMap">
@@ -25,6 +27,7 @@
     <script src="../js/jquery-3.3.1.min.js"></script>
     <!--velov.js!-->
     <script src="../js/velov.js"></script>
+
     
 
 </body>

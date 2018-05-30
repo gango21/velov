@@ -1,0 +1,17 @@
+#container {
+    width: 100%;
+}
+
+#map {
+    height: 400px;
+    width: 45%;
+    float : left;
+}
+
+#etatstation {
+    height:400px;
+    width:45%;
+    float: right;
+    border : 1px solid black;
+    padding-left: 20px;
+}
