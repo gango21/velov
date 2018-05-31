@@ -33,6 +33,7 @@ function initMap(stations){
                     velosDisponibles:velosDisponibles,
                     map:map,
                 });
+
         
             //Evènement au clic sur un marker
             marker.addListener('click', function() {
@@ -44,8 +45,20 @@ function initMap(stations){
                 document.getElementById("nombreDePlaces").innerHTML = marker.places ;
                 console.log(marker.velosDisponibles)
                 document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles ;
+                var buttonResvervation = document.getElementById("reservation")
+                    buttonResvervation.addEventListener('click', function(){
+                        if (marker.velosDisponibles > 0){
+                        document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles - 1;
+                        console.log("Vous avez reservé un vélo à la station " + marker.name)
+                        }
+                        else {
+                            console.log("Pas de vélos disponible")
+                        }
+                    })
                 });
             }
+    
+           
     
             
             //Ajouter des marqueurs
@@ -67,11 +80,4 @@ function initMap(stations){
             
 }
 
-//Générer les inofs pour le panneau de resrvation de la station
-    function infos(name){
-            var nomStation = document.getElementById("nomStation")
-            console.log(nomStation.textContent);
-            var nomStation = document.getElementById("adresse")
-            var nomStation = document.getElementById("nombreDePlaces")
-            var nomStation = document.getElementById("placesDisponibles")
-}
+
