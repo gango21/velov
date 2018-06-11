@@ -108,7 +108,14 @@ function load(key){
 	}
 function tempsRestant(record){
     var heureExpiration = record.timestamp;
-    document.getElementById("compteARebours").innerHTML = "Expiration de la réservation : " + new Date(heureExpiration)
+    setInterval(function(){
+        var minutesRestantes = (((heureExpiration-Date.now())/ 60000).toPrecision(4));
+        document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + minutesRestantes + " minutes.";
+        if (((heureExpiration-Date.now())/ 60000).toPrecision(2)<0){
+            localStorage.clear();
+            document.getElementById("compteARebours").innerHTML = "Expirée"
+        }
+    }, 1000)
 }
 
 function reservationEnCours(){
@@ -118,7 +125,6 @@ function reservationEnCours(){
         console.log("Reservation en cours");
         document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + reservationEnCours.value
         console.log(localStorage.getItem("data"))
-        document.getElementById("compteARebours").innerHTML = "Expiration de la réservation : " + new Date(reservationEnCours.timestamp)
     }
     else {
         console.log("Pas de reservation")
@@ -128,5 +134,5 @@ function reservationEnCours(){
 function eraseLocalData(){
     window.onbeforeunload = function () {
     localStorage.clear();
-};
+    };
 }
