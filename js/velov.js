@@ -33,7 +33,8 @@ function initMap(stations){
                     velosDisponibles:velosDisponibles,
                     map:map,
                 });
-
+                
+            eraseLocalData() ;
         
             //Evènement au clic sur un marker et reservation
             marker.addListener('click', function() {
@@ -45,27 +46,33 @@ function initMap(stations){
                 document.getElementById("nombreDePlaces").innerHTML = marker.places ;
                 console.log(marker.velosDisponibles)
                 document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles ;
+                if (marker.velosDisponibles === 0){
+                    document.getElementById("reservation").style.display = "none";
+                }
+                else {
+                document.getElementById("reservation").style.display = "block";
                 var buttonResvervation = document.getElementById("reservation")
                     buttonResvervation.addEventListener('click', function(){
                         if (marker.velosDisponibles > 0){
-                            var storeReservation = JSON.stringify(marker.name);
+                            var storeReservation = marker.name;
                             console.log("Local stroage : " + storeReservation);
-                            localStorage.setItem('data', storeReservation);
+                            save('data', storeReservation, 20);
+                            load('data');
                             document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles - 1;
                             document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + marker.name
                             console.log("Vous avez reservé un vélo à la station " + marker.name)
                         }
-                        else {
+                        else if (marker.velosDisponibles === 0){
                             console.log("Pas de vélos disponible")
                             document.getElementById("reservationEnCours").innerHTML = "Pas de vélos disponibles à la station " + marker.name
+                            document.getElementById("placesDisponibles").innerHTML = 0;
                         }
                     })
+                 }
                 });
             }
     
-           
-    
-            
+        
             //Ajouter des marqueurs
             for (i=0 ; i<stations.length ; i++){
                 var coords = {
@@ -82,7 +89,44 @@ function initMap(stations){
                 console.log(adresse)
                 addMarker(coords, nomStation)
             };
+    
+            reservationEnCours();
             
 }
 
+function save(key, jsonData, expirationMin){
+		var expirationMS = expirationMin * 60 * 1000;
+		var record = {value: JSON.stringify(jsonData), timestamp: new Date().getTime() + expirationMS}
+		localStorage.setItem(key, JSON.stringify(record));
+		return jsonData;
+	}
+function load(key){
+		var record = JSON.parse(localStorage.getItem(key));
+		if (!record){return false;}
+        tempsRestant(record);
+		return (new Date().getTime() < record.timestamp && JSON.parse(record.value))
+	}
+function tempsRestant(record){
+    var heureExpiration = record.timestamp;
+    document.getElementById("compteARebours").innerHTML = "Expiration de la réservation : " + new Date(heureExpiration)
+}
 
+function reservationEnCours(){
+    if (new Date().getTime() > localStorage.getItem("timestamp")){
+        var reservationEnCours = JSON.parse(localStorage.getItem("data"))
+        console.log(reservationEnCours.value)
+        console.log("Reservation en cours");
+        document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + reservationEnCours.value
+        console.log(localStorage.getItem("data"))
+        document.getElementById("compteARebours").innerHTML = "Expiration de la réservation : " + new Date(reservationEnCours.timestamp)
+    }
+    else {
+        console.log("Pas de reservation")
+    }
+}
+
+function eraseLocalData(){
+    window.onbeforeunload = function () {
+    localStorage.clear();
+};
+}
