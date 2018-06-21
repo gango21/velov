@@ -82,9 +82,30 @@ function initMap(stations){
                 var velosDisponibles = stations[i].available_bikes ;
                 addMarker(coords, nomStation)
             };
+    
+            // Ajout du cluster de markers
+            // Ajout de d'une liste des "locations" et des "labels" pour chaque station
+            for (i=0 ; i<stations.length ; i++){
+                var locations = [
+                    {lat:stations[i].position.lat,
+                    lng:stations[i].position.lng},
+                ]
+                console.log(locations)
+                var labels = i+1
+                console.log(labels)
+            }
             
-            var markerCluster = new MarkerClusterer(map, marker,
+            var markers = locations.map(function(location, i) {
+              return new google.maps.Marker({
+                position: location,
+                label: labels[i % labels.length]
+              });
+            });
+            
+            var markerCluster = new MarkerClusterer(map, markers,
             {imagePath: '../images'});
+            
+           
 }
 
 function save(key, jsonData, expirationMin){
