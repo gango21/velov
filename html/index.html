@@ -16,6 +16,8 @@
         <p>Adresse : <span id="adresse"></span></p>
         <p>Nombre de places : <span id="nombreDePlaces"></span></p>
         <p>Vélos disponibles : <span id="placesDisponibles"></span></p>
+        <canvas id="canvas" width="150" height="150">
+        </canvas>
         <form id="reservation"> 
           <input type="button" value="Réservation" id="reservation">
         </form>
@@ -24,7 +26,7 @@
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdFj59goa62jO2ElaHUegBiK4RYk7Ai9s
 &callback=initMap">
     </script>
-    
+    <script src="../js/markerclusterer.js"></script>
     <!--Inclure jquerry!-->
     <script src="../js/jquery-3.3.1.min.js"></script>
     <!--velov.js!-->

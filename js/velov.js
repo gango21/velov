@@ -6,7 +6,6 @@ $(function(){
     }, function(data){
         var stations = data;
         for ( i=0 ; i<stations.length ; i++){
-            console.log("Nome de la station : " + stations[i].name + ", latitude : " + stations[i].position.lat + ", longitude : " + stations[i].position.lng)
         }
         initMap(stations)
     })
@@ -22,7 +21,7 @@ function initMap(stations){
             //nouvelle carte
             var map = new google.maps.Map(document.getElementById('map'),options);
             
-            
+    
             //Add Marker function
             function addMarker(coords, nomStation){
                 var marker = new google.maps.Marker({
@@ -33,18 +32,14 @@ function initMap(stations){
                     velosDisponibles:velosDisponibles,
                     map:map,
                 });
-                
+            
             eraseLocalData() ;
         
             //Evènement au clic sur un marker et reservation
             marker.addListener('click', function() {
-                console.log(marker.name)
                 document.getElementById("nomStation").innerHTML = marker.name ;
-                console.log(marker.adresse)
                 document.getElementById("adresse").innerHTML = marker.adresse ;
-                console.log(marker.places)
                 document.getElementById("nombreDePlaces").innerHTML = marker.places ;
-                console.log(marker.velosDisponibles)
                 document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles ;
                 if (marker.velosDisponibles === 0){
                     document.getElementById("reservation").style.display = "none";
@@ -52,27 +47,29 @@ function initMap(stations){
                 else {
                 document.getElementById("reservation").style.display = "block";
                 var buttonResvervation = document.getElementById("reservation")
-                    buttonResvervation.addEventListener('click', function(){
-                        if (marker.velosDisponibles > 0){
-                            var storeReservation = marker.name;
-                            console.log("Local stroage : " + storeReservation);
-                            save('data', storeReservation, 20);
-                            load('data');
-                            document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles - 1;
-                            document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + marker.name
-                            console.log("Vous avez reservé un vélo à la station " + marker.name)
-                        }
-                        else if (marker.velosDisponibles === 0){
-                            console.log("Pas de vélos disponible")
-                            document.getElementById("reservationEnCours").innerHTML = "Pas de vélos disponibles à la station " + marker.name
-                            document.getElementById("placesDisponibles").innerHTML = 0;
-                        }
+                buttonResvervation.addEventListener('click', function(){
+                            if (marker.velosDisponibles > 0){
+                                var storeReservation = marker.name;
+                                console.log("Local storage : " + storeReservation);
+                                save('data', storeReservation, 1);
+                                load('data');
+                                document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles - 1;
+                                document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + marker.name
+                                console.log("Vous avez reservé un vélo à la station " + marker.name)
+                            }
+                            else if (storeReservation !== null){
+                                document.getElementById("reservationEnCours").innerHTML = "Veuillez annuler votre réservation à la station " + reservationEnCours.value
+                            }
+                            else if (marker.velosDisponibles === 0){
+                                console.log("Pas de vélos disponible")
+                                document.getElementById("reservationEnCours").innerHTML = "Pas de vélos disponibles à la station " + marker.name
+                                document.getElementById("placesDisponibles").innerHTML = 0;
+                            }  
                     })
                  }
-                });
+            });
             }
     
-        
             //Ajouter des marqueurs
             for (i=0 ; i<stations.length ; i++){
                 var coords = {
@@ -83,15 +80,11 @@ function initMap(stations){
                 var adresse = stations[i].address ;
                 var places = stations[i].bike_stands ;
                 var velosDisponibles = stations[i].available_bikes ;
-                
-                console.log(coords)
-                console.log(nomStation)
-                console.log(adresse)
                 addMarker(coords, nomStation)
             };
-    
-            reservationEnCours();
             
+            var markerCluster = new MarkerClusterer(map, marker,
+            {imagePath: '../images'});
 }
 
 function save(key, jsonData, expirationMin){
@@ -99,36 +92,25 @@ function save(key, jsonData, expirationMin){
 		var record = {value: JSON.stringify(jsonData), timestamp: new Date().getTime() + expirationMS}
 		localStorage.setItem(key, JSON.stringify(record));
 		return jsonData;
-	}
+}
+
 function load(key){
 		var record = JSON.parse(localStorage.getItem(key));
 		if (!record){return false;}
         tempsRestant(record);
 		return (new Date().getTime() < record.timestamp && JSON.parse(record.value))
-	}
+}
+
 function tempsRestant(record){
     var heureExpiration = record.timestamp;
     setInterval(function(){
-        var minutesRestantes = (((heureExpiration-Date.now())/ 60000).toPrecision(4));
-        document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + minutesRestantes + " minutes.";
-        if (((heureExpiration-Date.now())/ 60000).toPrecision(2)<0){
+        var minutesRestantes = heureExpiration-Date.now()
+        document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
+        if (minutesRestantes<0){
             localStorage.clear();
             document.getElementById("compteARebours").innerHTML = "Expirée"
         }
     }, 1000)
-}
-
-function reservationEnCours(){
-    if (new Date().getTime() > localStorage.getItem("timestamp")){
-        var reservationEnCours = JSON.parse(localStorage.getItem("data"))
-        console.log(reservationEnCours.value)
-        console.log("Reservation en cours");
-        document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + reservationEnCours.value
-        console.log(localStorage.getItem("data"))
-    }
-    else {
-        console.log("Pas de reservation")
-    }
 }
 
 function eraseLocalData(){
@@ -136,3 +118,15 @@ function eraseLocalData(){
     localStorage.clear();
     };
 }
+
+function convertMS(ms) {
+  var d, h, m, s;
+  s = Math.floor(ms / 1000);
+  m = Math.floor(s / 60);
+  s = s % 60;
+  h = Math.floor(m / 60);
+  m = m % 60;
+  d = Math.floor(h / 24);
+  h = h % 24;
+  return { d: d, h: h, m: m, s: s };
+};
