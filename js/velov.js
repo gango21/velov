@@ -86,13 +86,10 @@ function initMap(stations){
             // Ajout du cluster de markers
             // Ajout de d'une liste des "locations" et des "labels" pour chaque station
             for (i=0 ; i<stations.length ; i++){
-                var locations = [
+                var locations =
                     {lat:stations[i].position.lat,
-                    lng:stations[i].position.lng},
-                ]
-                console.log(locations)
+                    lng:stations[i].position.lng}
                 var labels = i+1
-                console.log(labels)
             }
             
             var markers = locations.map(function(location, i) {
