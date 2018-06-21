@@ -85,10 +85,11 @@ function initMap(stations){
     
             // Ajout du cluster de markers
             // Ajout de d'une liste des "locations" et des "labels" pour chaque station
+            
+            var locations = []
             for (i=0 ; i<stations.length ; i++){
-                var locations =
-                    {lat:stations[i].position.lat,
-                    lng:stations[i].position.lng}
+                locations.push({lat:stations[i].position.lat,
+                lng:stations[i].position.lng})
                 var labels = i+1
             }
             
@@ -100,7 +101,7 @@ function initMap(stations){
             });
             
             var markerCluster = new MarkerClusterer(map, markers,
-            {imagePath: '../images'});
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}); //mettre un chemin local ?
             
            
 }
