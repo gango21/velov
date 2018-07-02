@@ -5,8 +5,6 @@ $(function(){
         url: 'https://api.jcdecaux.com/vls/v1/stations?contract=Lyon&apiKey=8107a525c841e0b25de543e35fd372943e7b9f1f',
     }, function(data){
         var stations = data;
-        for ( i=0 ; i<stations.length ; i++){
-        }
         initMap(stations)
     })
 })
@@ -20,10 +18,9 @@ function initMap(stations){
             
             //nouvelle carte
             var map = new google.maps.Map(document.getElementById('map'),options);
-            
     
             //Add Marker function
-            function addMarker(coords, nomStation){
+            /*function addMarker(coords, nomStation){
                 var marker = new google.maps.Marker({
                     position:coords,
                     name:nomStation,
@@ -35,39 +32,7 @@ function initMap(stations){
             
             eraseLocalData() ;
         
-            //Evènement au clic sur un marker et reservation
-            marker.addListener('click', function() {
-                document.getElementById("nomStation").innerHTML = marker.name ;
-                document.getElementById("adresse").innerHTML = marker.adresse ;
-                document.getElementById("nombreDePlaces").innerHTML = marker.places ;
-                document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles ;
-                if (marker.velosDisponibles === 0){
-                    document.getElementById("reservation").style.display = "none";
-                }
-                else {
-                document.getElementById("reservation").style.display = "block";
-                var buttonResvervation = document.getElementById("reservation")
-                buttonResvervation.addEventListener('click', function(){
-                            if (marker.velosDisponibles > 0){
-                                var storeReservation = marker.name;
-                                console.log("Local storage : " + storeReservation);
-                                save('data', storeReservation, 1);
-                                load('data');
-                                document.getElementById("placesDisponibles").innerHTML = marker.velosDisponibles - 1;
-                                document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + marker.name
-                                console.log("Vous avez reservé un vélo à la station " + marker.name)
-                            }
-                            else if (storeReservation !== null){
-                                document.getElementById("reservationEnCours").innerHTML = "Veuillez annuler votre réservation à la station " + reservationEnCours.value
-                            }
-                            else if (marker.velosDisponibles === 0){
-                                console.log("Pas de vélos disponible")
-                                document.getElementById("reservationEnCours").innerHTML = "Pas de vélos disponibles à la station " + marker.name
-                                document.getElementById("placesDisponibles").innerHTML = 0;
-                            }  
-                    })
-                 }
-            });
+            
             }
     
             //Ajouter des marqueurs
@@ -81,35 +46,73 @@ function initMap(stations){
                 var places = stations[i].bike_stands ;
                 var velosDisponibles = stations[i].available_bikes ;
                 addMarker(coords, nomStation)
-            };
+                console.log(stations[i].name)
+            };*/
     
             // Ajout du cluster de markers
             // Ajout de d'une liste des "locations" et des "labels" pour chaque station
             
             var locations = []
-            for (i=0 ; i<stations.length ; i++){
-                locations.push({lat:stations[i].position.lat,
-                lng:stations[i].position.lng})
-                var labels = i+1
-            }
-            
+            for (i=0 ; i < stations.length ; i++){
+                locations.push({
+                    lat:stations[i].position.lat,
+                    lng:stations[i].position.lng
+                });
+                var labels = i+1;
+                }
+    
             var markers = locations.map(function(location, i) {
-              return new google.maps.Marker({
+              var marker = new google.maps.Marker({
                 position: location,
-                label: labels[i % labels.length]
+                labels: labels[i % labels.length],
+                map:map,
               });
+            
+                //Evènement au clic sur un marker et reservation
+            marker.addListener('click', function() {
+                document.getElementById("nomStation").innerHTML = stations[i].name ;
+                document.getElementById("adresse").innerHTML = stations[i].address ;
+                document.getElementById("nombreDePlaces").innerHTML = stations[i].bike_stands ;
+                document.getElementById("placesDisponibles").innerHTML = stations[i].available_bikes ;
+                if (stations[i].available_bikes === 0){
+                    document.getElementById("reservation").style.display = "none";
+                }
+                else {
+                document.getElementById("reservation").style.display = "block";
+                var buttonResvervation = document.getElementById("reservation")
+                buttonResvervation.addEventListener('click', function(){
+                            if (stations[i].available_bikes > 0){
+                                var storeReservation = stations[i].name;
+                                save('data', storeReservation, 0.25);
+                                load('data');
+                                stations[i].available_bikes --;
+                                document.getElementById("placesDisponibles").innerHTML = stations[i].available_bikes;
+                                document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + stations[i].name
+                            }
+                            else if (stations[i].available_bikes === 0){
+                                console.log("Pas de vélos disponible")
+                                document.getElementById("reservationEnCours").innerHTML = "Pas de vélos disponibles à la station " + stations[i].name
+                                document.getElementById("placesDisponibles").innerHTML = 0;
+                            }
+                    document.getElementById("annuler").style.display = "block";
+                    })
+                 }
+                var buttonAnnulation = document.getElementById("annulation")
+                buttonResvervation.addEventListener('click', function(){
+                })
+            });
+                return marker
             });
             
             var markerCluster = new MarkerClusterer(map, markers,
-            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}); //mettre un chemin local ?
-            
-           
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}); //mettre un chemin local ?          
 }
 
 function save(key, jsonData, expirationMin){
 		var expirationMS = expirationMin * 60 * 1000;
-		var record = {value: JSON.stringify(jsonData), timestamp: new Date().getTime() + expirationMS}
+		var record = {value: (jsonData), timestamp: new Date().getTime() + expirationMS}
 		localStorage.setItem(key, JSON.stringify(record));
+        document.getElementById("annuler").value = "Annuler " +  record.value
 		return jsonData;
 }
 
@@ -117,26 +120,28 @@ function load(key){
 		var record = JSON.parse(localStorage.getItem(key));
 		if (!record){return false;}
         tempsRestant(record);
-		return (new Date().getTime() < record.timestamp && JSON.parse(record.value))
+		return (new Date().getTime() < record.timestamp && (record.value))
 }
 
 function tempsRestant(record){
     var heureExpiration = record.timestamp;
     setInterval(function(){
         var minutesRestantes = heureExpiration-Date.now()
+        document.getElementById("compteARebours").clear
         document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
         if (minutesRestantes<0){
             localStorage.clear();
             document.getElementById("compteARebours").innerHTML = "Expirée"
+            document.getElementById("annuler").style.display = "none";
         }
     }, 1000)
 }
 
-function eraseLocalData(){
+/*function eraseLocalData(){
     window.onbeforeunload = function () {
     localStorage.clear();
     };
-}
+}*/
 
 function convertMS(ms) {
   var d, h, m, s;
