@@ -5,6 +5,8 @@ function init(){
         url: 'https://api.jcdecaux.com/vls/v1/stations?contract=Lyon&apiKey=8107a525c841e0b25de543e35fd372943e7b9f1f',
     }, function(data){
         var stations = data;
+        var reservation = false;
+        console.log(reservation)
         console.log(stations)
         if (stations != undefined){
             initMap(stations)
@@ -109,17 +111,20 @@ function initMap(stations){
             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}); //mettre un chemin local ? 
     
             // Si il y a une réservation permettre l'annulation
-                if (localStorage.getItem("data") !== null) {
+                setInterval(function(){
+                    if (reservation) {
                     document.getElementById("annuler").style.display = "block";
                     var buttonAnnulation = document.getElementById("annuler")
                     buttonAnnulation.addEventListener('click', function(){
                         localStorage.clear()
                         document.getElementById("compteARebours").innerHTML = "Annulée"
                     })
-                }
+                    }
+                }, 1000)
 }
 
 function save(key, jsonData, expirationMin){
+        var reservation = true;
 		var expirationMS = expirationMin * 60 * 1000;
 		var record = {value: (jsonData), timestamp: new Date().getTime() + expirationMS}
 		localStorage.setItem(key, JSON.stringify(record));
@@ -142,6 +147,7 @@ function tempsRestant(record){
         if (minutesRestantes<0){
             localStorage.removeItem("data")
             document.getElementById("compteARebours").innerHTML = "Expirée"
+            var reservation = false;
         }
     }, 1000)
 }
