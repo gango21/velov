@@ -1,3 +1,5 @@
+window.reservation = false;
+
 function init(){
     
     $.get({
@@ -5,7 +7,6 @@ function init(){
         url: 'https://api.jcdecaux.com/vls/v1/stations?contract=Lyon&apiKey=8107a525c841e0b25de543e35fd372943e7b9f1f',
     }, function(data){
         var stations = data;
-        var reservation = false;
         console.log(reservation)
         console.log(stations)
         if (stations != undefined){
@@ -87,6 +88,7 @@ function initMap(stations){
                     document.getElementById("reservation").style.display = "block";
                     var buttonResvervation = document.getElementById("reservation")
                     buttonResvervation.addEventListener('click', function(){
+                        window.reservation = true;
                             if (stations[i].available_bikes > 0){
                                 var storeReservation = stations[i].name;
                                 save('data', storeReservation, 0.5);
@@ -112,19 +114,22 @@ function initMap(stations){
     
             // Si il y a une réservation permettre l'annulation
                 setInterval(function(){
-                    if (reservation) {
+                    if (window.reservation) {
+                    console.log(window.reservation)
                     document.getElementById("annuler").style.display = "block";
                     var buttonAnnulation = document.getElementById("annuler")
                     buttonAnnulation.addEventListener('click', function(){
                         localStorage.clear()
                         document.getElementById("compteARebours").innerHTML = "Annulée"
+                        document.getElementById("annuler").style.display = "none";
+                        window.reservation = false;
                     })
                     }
                 }, 1000)
 }
 
 function save(key, jsonData, expirationMin){
-        var reservation = true;
+        window.reservation = true;
 		var expirationMS = expirationMin * 60 * 1000;
 		var record = {value: (jsonData), timestamp: new Date().getTime() + expirationMS}
 		localStorage.setItem(key, JSON.stringify(record));
@@ -135,7 +140,7 @@ function save(key, jsonData, expirationMin){
 function load(key){
 		var record = JSON.parse(localStorage.getItem(key));
 		if (!record){return false;}
-        tempsRestant(record);
+        /*tempsRestant(record);*/
 		return (new Date().getTime() < record.timestamp && (record.value))
 }
 
@@ -147,7 +152,7 @@ function tempsRestant(record){
         if (minutesRestantes<0){
             localStorage.removeItem("data")
             document.getElementById("compteARebours").innerHTML = "Expirée"
-            var reservation = false;
+            window.reservation = false;
         }
     }, 1000)
 }
