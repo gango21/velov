@@ -140,7 +140,7 @@ function save(key, jsonData, expirationMin){
 function load(key){
 		var record = JSON.parse(localStorage.getItem(key));
 		if (!record){return false;}
-        /*tempsRestant(record);*/
+        tempsRestant(record);
 		return (new Date().getTime() < record.timestamp && (record.value))
 }
 
@@ -148,8 +148,10 @@ function tempsRestant(record){
     var heureExpiration = record.timestamp;
     setInterval(function(){
         var minutesRestantes = heureExpiration-Date.now()
+        if (minutesRestantes>0 && window.reservation){
         document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
-        if (minutesRestantes<0){
+        }
+        else if (minutesRestantes<0 && window.reservation==false){
             localStorage.removeItem("data")
             document.getElementById("compteARebours").innerHTML = "Expirée"
             window.reservation = false;
