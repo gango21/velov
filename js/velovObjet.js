@@ -42,6 +42,11 @@ function initMap(stations){
                 var station = Object.create(Station);
                 station.init(stations[i].name, stations[i].bike_stands, stations[i].available_bikes, stations[i].address)
                 console.log(station)
+                var buttonResvervation = document.getElementById("reservation")
+                buttonResvervation.addEventListener('click', function(){
+                    var reservation = Object.create(Reservation);
+                    reservation.init(station.nom);
+                })
             });
                 return marker
             });
@@ -64,7 +69,47 @@ var Station = {
         document.getElementById("adresse").innerHTML = this.adresse;
         document.getElementById("nombreDePlaces").innerHTML = this.places;
         document.getElementById("placesDisponibles").innerHTML = this.placesDisponibles;
+        // Permettre la réservation si des places sont disponibles
+        if (this.placesDisponibles===0) {
+            document.getElementById("reservation").style.display = "none";
+        } else if (this.placesDisponibles>0){
+            document.getElementById("reservation").style.display = "block";
+        }
     }
 }
 
 // A faire un prototype de reservation
+
+var Reservation = {
+    //Initialise la reservation
+    init: function (station){
+        this.station = station;
+        document.getElementById("reservationEnCours").innerHTML = "Vous avez reservé un vélo à la station " + this.station
+        var record = {
+            stationReservee: (this.station), 
+            tempsExpiration: new Date().getTime() + 1*60*1000
+        }
+        localStorage.setItem("key", JSON.stringify(record));
+        setInterval(function(){
+            var minutesRestantes = record.tempsExpiration-Date.now()
+            if (minutesRestantes>0){
+            document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
+            } else if (minutesRestantes<0){
+                localStorage.removeItem("key")
+                document.getElementById("compteARebours").innerHTML = "Expirée"
+            }
+        }, 1000)
+    }
+}
+
+function convertMS(ms) {
+  var d, h, m, s;
+  s = Math.floor(ms / 1000);
+  m = Math.floor(s / 60);
+  s = s % 60;
+  h = Math.floor(m / 60);
+  m = m % 60;
+  d = Math.floor(h / 24);
+  h = h % 24;
+  return { d: d, h: h, m: m, s: s };
+};
