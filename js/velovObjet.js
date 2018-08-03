@@ -117,6 +117,7 @@ var Annulation = {
             tempsExpiration: new Date().getTime()
         }
         localStorage.setItem("key", JSON.stringify(record));
+        
         var checkCompteRebours = setInterval(myTimer, 0);
         clearInterval(checkCompteRebours);
     }
@@ -134,7 +135,6 @@ function myTimer() {
         document.getElementById("annuler").style.display = "none";
         localStorage.clear()
     }
-    console.log(minutesRestantes)
     return minutesRestantes;
 }
 
