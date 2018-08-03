@@ -49,7 +49,6 @@ function initMap(stations){
                 if (confirmation) {
                     var reservation = Object.create(Reservation);
                     reservation.init(station.nom);
-                    console.log(reservation.station)
                     // bouton d'annulation
                     var buttonAnnulation = document.getElementById("annuler")
                     // créer un objet d'annulation
@@ -95,8 +94,6 @@ var Reservation = {
         this.station = station;
         document.getElementById("reservationEnCours").innerHTML = " Vous avez reservé un vélo à la station " + this.station
         document.getElementById("annuler").value = "Annuler " + this.station
-        document.getElementById("annuler").style.color = "black";
-        console.log ("annuler" + this.station)
         var record = {
             stationReservee: (this.station), 
             tempsExpiration: new Date().getTime() + 1*60*1000
