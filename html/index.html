@@ -10,6 +10,14 @@
     
 <body>
     <h1>Vélo'v</h1>
+    <div id="slider">
+        <img name="slide" width="400" height="200" />
+        <form id="resa"> 
+            <input type="button" value="Précedent" id="prec">
+            <input type="button" value="Suivant" id="suiv">
+        </form>
+    </div>
+    
     <div id="map"></div>
     <div id="etatstation">
         <h2 id="nomStation"></h2>
@@ -21,7 +29,7 @@
         </canvas>
         <form id="resa"> 
           <input type="button" value="Réservation" id="reservation">
-          <input type="button" value="" id="annuler">
+          <input type="button" value="Annuler" id="annuler">
         </form>
     </div>
     <!--velov.js!-->
@@ -36,6 +44,7 @@
     <!--velov.js!-->
     <!--<script src="../js/velov.js"></script>!-->
     <script src="../js/velovObjet.js"></script>
+    <script src="../js/slider.js"></script>
     <footer>
     <p id="reservationEnCours"></p>
     <p id="compteARebours"></p>

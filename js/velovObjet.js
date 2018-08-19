@@ -42,21 +42,15 @@ function initMap(stations){
             var buttonResvervation = document.getElementById("reservation")
             // créer un objet reservation
             buttonResvervation.addEventListener('click', function(){
-                var confirmation = true
-                if (localStorage.getItem("key") !== null){
-                    var confirmation = confirm("Vous allez annuler la réservation en cours à ")
-                }
-                if (confirmation) {
-                    var reservation = Object.create(Reservation);
-                    reservation.init(station.nom);
-                    // bouton d'annulation
-                    var buttonAnnulation = document.getElementById("annuler")
-                    // créer un objet d'annulation
-                    buttonAnnulation.addEventListener('click', function(){ 
-                        var annulation = Object.create(Annulation);
-                        annulation.init(station.nom);
-                    })
-                }
+                var reservation = Object.create(Reservation);
+                reservation.init(station.nom);
+                // bouton d'annulation
+                var buttonAnnulation = document.getElementById("annuler")
+                // créer un objet d'annulation
+                buttonAnnulation.addEventListener('click', function(){ 
+                    var annulation = Object.create(Annulation);
+                    annulation.init(station.nom);
+                })
             })
         })
     return marker
@@ -95,12 +89,11 @@ var Reservation = {
         document.getElementById("reservationEnCours").innerHTML = " Vous avez reservé un vélo à la station " + this.station
         document.getElementById("annuler").value = "Annuler " + this.station
         var record = {
-            stationReservee: (this.station), 
-            tempsExpiration: new Date().getTime() + 1*60*1000
+            station: this.station,
+            tempsExpiration: new Date().getTime() + 1*60*1000,
         }
-        localStorage.setItem("key", JSON.stringify(record));
-        clearInterval(checkCompteRebours)
-        var checkCompteRebours = setInterval(myTimer, 1000);
+        localStorage.setItem("reservation", JSON.stringify(record));
+        var checkCompteRebours = setInterval(myTimer,500)
     }
 }
 
@@ -110,28 +103,32 @@ var Annulation = {
         this.station = station;
         document.getElementById("reservationEnCours").innerHTML = "Vous avez annulé une réservation à la station " + this.station
         var record = {
-            stationReservee: (this.station), 
-            tempsExpiration: new Date().getTime()
+            station: this.station,
+            tempsExpiration: "annulée"
         }
-        localStorage.setItem("key", JSON.stringify(record));
-        
-        var checkCompteRebours = setInterval(myTimer, 0);
-        clearInterval(checkCompteRebours);
+        localStorage.setItem("reservation", JSON.stringify(record));
+        //var checkCompteRebours = setInterval(myTimer, 1000);
     }
 }
 
 function myTimer() {
-    var storage = localStorage.getItem("key")
+    var storage = localStorage.getItem("reservation")
     var localStorageJSON = JSON.parse(storage)
-    var minutesRestantes = localStorageJSON.tempsExpiration-Date.now();
+    var tempsExpiration = localStorageJSON.tempsExpiration
+    var minutesRestantes = tempsExpiration-Date.now();
     if (minutesRestantes>0){
         document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
-        document.getElementById("annuler").style.display = "block";
+        document.getElementById("reservation").style.display = "none"
+        document.getElementById("annuler").style.display = "block"
+    } else if (tempsExpiration === "annulée") {
+        document.getElementById("compteARebours").innerHTML = "";   
+        document.getElementById("reservation").style.display = "block"
+        document.getElementById("annuler").style.display = "none"
     } else if (minutesRestantes<0){
-        document.getElementById("compteARebours").innerHTML = "Expirée"
-        document.getElementById("annuler").style.display = "none";
-        localStorage.clear()
-    }
+        document.getElementById("compteARebours").innerHTML = "Votre réservation est expirée ";
+        document.getElementById("reservation").style.display = "block"
+        document.getElementById("annuler").style.display = "none"
+    }   
     return minutesRestantes;
 }
 
