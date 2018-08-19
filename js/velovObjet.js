@@ -90,7 +90,7 @@ var Reservation = {
         document.getElementById("annuler").value = "Annuler " + this.station
         var record = {
             station: this.station,
-            tempsExpiration: new Date().getTime() + 1*60*1000,
+            tempsExpiration: new Date().getTime() + 1*10*1000,
         }
         localStorage.setItem("reservation", JSON.stringify(record));
         var checkCompteRebours = setInterval(myTimer,500)
