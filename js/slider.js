@@ -48,7 +48,7 @@ function changeImg(){
           i--; 
         } else { 
             // Reset To End
-            i = images.length;
+            i = images.length-1;
         }
     })
 
