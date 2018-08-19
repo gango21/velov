@@ -43,7 +43,7 @@ function changeImg(){
             document.slide.src = images[i];
 
         // Check If Index Is Under Max
-        if(i < 1){
+        if(i > 0){
           // Delete 1 to Index
           i--; 
         } else { 
