@@ -1,3 +1,12 @@
+var buttonResvervation = document.getElementById("reservation")
+var buttonAnnulation = document.getElementById("annuler")
+var nomStation = document.getElementById("nomStation")
+var adresse = document.getElementById("adresse")
+var nombreDePlaces = document.getElementById("nombreDePlaces")
+var placesDisponibles = document.getElementById("placesDisponibles")
+var reservationEnCours = document.getElementById("reservationEnCours")
+var compteARebours = document.getElementById("compteARebours")
+
 function init(){
     $.get({
         type: 'GET',
@@ -38,14 +47,10 @@ function initMap(stations){
         marker.addListener('click', function() {
             var station = Object.create(Station);
             station.init(stations[i].name, stations[i].bike_stands, stations[i].available_bikes, stations[i].address)
-            // bouton de reservation
-            var buttonResvervation = document.getElementById("reservation")
             // créer un objet reservation
             buttonResvervation.addEventListener('click', function(){
                 var reservation = Object.create(Reservation);
                 reservation.init(station.nom);
-                // bouton d'annulation
-                var buttonAnnulation = document.getElementById("annuler")
                 // créer un objet d'annulation
                 buttonAnnulation.addEventListener('click', function(){ 
                     var annulation = Object.create(Annulation);
@@ -69,16 +74,16 @@ var Station = {
         this.places = places;
         this.placesDisponibles = placesDisponibles;
         this.adresse = adresse;
-        document.getElementById("nomStation").innerHTML = this.nom;
-        document.getElementById("adresse").innerHTML = this.adresse;
-        document.getElementById("nombreDePlaces").innerHTML = this.places;
-        document.getElementById("placesDisponibles").innerHTML = this.placesDisponibles;
+        nomStation.innerHTML = this.nom;
+        adresse.innerHTML = this.adresse;
+        nombreDePlaces.innerHTML = this.places;
+        placesDisponibles.innerHTML = this.placesDisponibles;
         // Permettre la réservation si des places sont disponibles
         if (this.placesDisponibles===0) {
-            document.getElementById("reservation").style.display = "none";
+            buttonResvervation.style.display = "none";
             canvas.style.display = "none"
         } else if (this.placesDisponibles>0){
-            document.getElementById("reservation").style.display = "block";
+            buttonResvervation.style.display = "block";
             canvas.style.display = "block"
         }
     }
@@ -90,8 +95,8 @@ var Reservation = {
     //Initialise la reservation
     init: function (station){
         this.station = station;
-        document.getElementById("reservationEnCours").innerHTML = " Vous avez reservé un vélo à la station " + this.station
-        document.getElementById("annuler").value = "Annuler " + this.station
+        reservationEnCours.innerHTML = " Vous avez reservé un vélo à la station " + this.station
+        buttonAnnulation.value = "Annuler " + this.station
         canvas.style.display = "none"
         var record = {
             station: this.station,
@@ -107,7 +112,7 @@ var Annulation = {
     //Initialise la reservation
     init: function (station){
         this.station = station;
-        document.getElementById("reservationEnCours").innerHTML = "Vous avez annulé une réservation à la station " + this.station
+        reservationEnCours.innerHTML = "Vous avez annulé une réservation à la station " + this.station
         var record = {
             station: this.station,
             tempsExpiration: "annulée"
@@ -123,19 +128,17 @@ function myTimer() {
     var tempsExpiration = localStorageJSON.tempsExpiration
     var minutesRestantes = tempsExpiration-Date.now();
     if (minutesRestantes>0){
-        document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
-        document.getElementById("reservation").style.display = "none"
-        document.getElementById("annuler").style.display = "block"
-        console.log("compteàrebours")
+        compteARebours.innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
+        buttonResvervation.style.display = "none"
+        buttonAnnulation.style.display = "block"
     } else if (tempsExpiration === "annulée") {
-        document.getElementById("compteARebours").innerHTML = "";   
-        document.getElementById("reservation").style.display = "block"
-        document.getElementById("annuler").style.display = "none"
-        console.log("compteàrebours")
+        compteARebours.innerHTML = "";   
+        buttonResvervation.style.display = "block"
+        buttonAnnulation.style.display = "none"
     } else if (minutesRestantes<0){
-        document.getElementById("compteARebours").innerHTML = "Votre réservation est expirée ";
-        document.getElementById("reservation").style.display = "block"
-        document.getElementById("annuler").style.display = "none"
+        compteARebours.innerHTML = "Votre réservation est expirée ";
+        buttonResvervation.style.display = "block"
+        buttonAnnulation.style.display = "none"
         canvas.style.display = "block"
         console.log("compteàrebours")
     }   
