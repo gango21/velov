@@ -1,11 +1,12 @@
 var buttonResvervation = document.getElementById("reservation")
 var buttonAnnulation = document.getElementById("annuler")
 var nomStation = document.getElementById("nomStation")
-var adresse = document.getElementById("adresse")
+var adresseStation = document.getElementById("adresse")
 var nombreDePlaces = document.getElementById("nombreDePlaces")
-var placesDisponibles = document.getElementById("placesDisponibles")
+var placesDisponiblesStation = document.getElementById("placesDisponibles")
 var reservationEnCours = document.getElementById("reservationEnCours")
 var compteARebours = document.getElementById("compteARebours")
+var checkCompteRebours = null
 
 function init(){
     $.get({
@@ -75,9 +76,9 @@ var Station = {
         this.placesDisponibles = placesDisponibles;
         this.adresse = adresse;
         nomStation.innerHTML = this.nom;
-        adresse.innerHTML = this.adresse;
+        adresseStation.innerHTML = this.adresse;
         nombreDePlaces.innerHTML = this.places;
-        placesDisponibles.innerHTML = this.placesDisponibles;
+        placesDisponiblesStation.innerHTML = this.placesDisponibles;
         // Permettre la réservation si des places sont disponibles
         if (this.placesDisponibles===0) {
             buttonResvervation.style.display = "none";
@@ -88,8 +89,6 @@ var Station = {
         }
     }
 }
-
-var checkCompteRebours = null
 
 var Reservation = {
     //Initialise la reservation
@@ -104,7 +103,7 @@ var Reservation = {
             signature: dataURL
         }
         localStorage.setItem("reservation", JSON.stringify(record));
-        var compteRebours = setInterval(myTimer,500) //
+        var checkCompteRebours = setInterval(myTimer,500) //
     }
 }
 
@@ -118,7 +117,7 @@ var Annulation = {
             tempsExpiration: "annulée"
         }
         localStorage.setItem("reservation", JSON.stringify(record));
-        clearInterval(checkCompteRebours)
+        var checkCompteRebours = clearInterval(myTimer)
     }
 }
 
@@ -135,11 +134,13 @@ function myTimer() {
         compteARebours.innerHTML = "";   
         buttonResvervation.style.display = "block"
         buttonAnnulation.style.display = "none"
+        console.log("annulée")
     } else if (minutesRestantes<0){
         compteARebours.innerHTML = "Votre réservation est expirée ";
         buttonResvervation.style.display = "block"
         buttonAnnulation.style.display = "none"
         canvas.style.display = "block"
+        var checkCompteRebours = clearInterval(myTimer)
         console.log("compteàrebours")
     }   
 }
