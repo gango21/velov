@@ -76,11 +76,15 @@ var Station = {
         // Permettre la réservation si des places sont disponibles
         if (this.placesDisponibles===0) {
             document.getElementById("reservation").style.display = "none";
+            canvas.style.display = "none"
         } else if (this.placesDisponibles>0){
             document.getElementById("reservation").style.display = "block";
+            canvas.style.display = "block"
         }
     }
 }
+
+var checkCompteRebours = null
 
 var Reservation = {
     //Initialise la reservation
@@ -88,12 +92,14 @@ var Reservation = {
         this.station = station;
         document.getElementById("reservationEnCours").innerHTML = " Vous avez reservé un vélo à la station " + this.station
         document.getElementById("annuler").value = "Annuler " + this.station
+        canvas.style.display = "none"
         var record = {
             station: this.station,
             tempsExpiration: new Date().getTime() + 1*10*1000,
+            signature: dataURL
         }
         localStorage.setItem("reservation", JSON.stringify(record));
-        var checkCompteRebours = setInterval(myTimer,500)
+        var compteRebours = setInterval(myTimer,500) //
     }
 }
 
@@ -107,7 +113,7 @@ var Annulation = {
             tempsExpiration: "annulée"
         }
         localStorage.setItem("reservation", JSON.stringify(record));
-        //var checkCompteRebours = setInterval(myTimer, 1000);
+        clearInterval(checkCompteRebours)
     }
 }
 
@@ -120,16 +126,19 @@ function myTimer() {
         document.getElementById("compteARebours").innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
         document.getElementById("reservation").style.display = "none"
         document.getElementById("annuler").style.display = "block"
+        console.log("compteàrebours")
     } else if (tempsExpiration === "annulée") {
         document.getElementById("compteARebours").innerHTML = "";   
         document.getElementById("reservation").style.display = "block"
         document.getElementById("annuler").style.display = "none"
+        console.log("compteàrebours")
     } else if (minutesRestantes<0){
         document.getElementById("compteARebours").innerHTML = "Votre réservation est expirée ";
         document.getElementById("reservation").style.display = "block"
         document.getElementById("annuler").style.display = "none"
+        canvas.style.display = "block"
+        console.log("compteàrebours")
     }   
-    return minutesRestantes;
 }
 
 function convertMS(ms) {

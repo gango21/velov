@@ -30,27 +30,13 @@ footer {
     display : none;
 }
 
-.slider {
-    width: 100%;
-    left: 0;
-    overflow: hidden;
-    position: relative;
-}
-
-.container {
-    top: 0;
-    left: 0;
-    margin: 0;
-    padding: 0;
-    width: 200%;
-    position: relative;
-    transition-duration: 1s;
-    transition-timing-function: ease-out;
-    transition-property: left;
-}
-
-.slide {
+#slider{
+    margin: auto;
     width: 50%;
-    position: relative;
-    display: inline-block;
+    padding-bottom: 20px;
+}
+
+#destCanvas{
+    margin: auto;
+    width: 25%;
 }
