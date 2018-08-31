@@ -1,5 +1,6 @@
 
 var buttonResvervation = document.getElementById("reservation")
+buttonResvervation.style.display = "none"
 var canvas  = document.querySelector('#canvas');
 canvas.style.display = "none"
 var destCanvas = document.getElementById('destCanvas');
@@ -43,11 +44,12 @@ function getMousePos(canvas, evt){
     };
 }
 
-function draw(canavas, posx, posy){
+function draw(canvas, posx, posy){
     var context = canvas.getContext("2d")
     if(md){
-        context.fillRect(posx, posy, 4, 4);
+        context.fillRect(posx, posy, 5, 5);
         context.fillStyle = "rgb(100,100,100)";
+        buttonResvervation.style.display="block";
     }
 }
 
