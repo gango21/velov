@@ -55,7 +55,6 @@ function draw(canvas, posx, posy){
 
 function save(){
     var dataURL = canvas.toDataURL("image/png", 1);
-    console.log(dataURL);
     destCtx.drawImage(canvas, 0, 0);
     destCanvas.style.display = "block"
     context.fillStyle = "rgb(189,212,148)";

@@ -3,9 +3,10 @@
 body {
     margin:0;
     padding:0;
-    font-family: 'Roboto', sans-serif;
     overflow-x:hidden;
     background-color: #4C6D6A;
+    font-family: 'Roboto';
+    font-weight: bold;
 }
 
 nav{
@@ -20,6 +21,13 @@ nav{
     z-index:3;
 }
 
+nav.black
+{
+    background: rgba(255,255,255,.8);
+    height:80px;
+    padding: 10px 50px;
+}
+
 nav .logo{
     float: left;
 }
@@ -29,11 +37,18 @@ nav .logo img{
     transition: .5s;
 }
 
+nav.black .logo img
+{
+    height:60px;
+}
+
 nav ul {
     float: right;
     margin: 0;
     padding: 0;
     display: flex;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
 }
 
 nav ul li{
@@ -41,7 +56,6 @@ nav ul li{
 }
 
 nav ul li a {
-    font-family: 'Roboto', sans-serif;
     line-height: 80px;
     color: #262626;
     padding: 5px 20px;
@@ -63,10 +77,7 @@ section{
 }
 
 section.sec1{
-    width: 100%;
-    height: 100vh;
-    position:relative;
-    top: 40vh;
+    top: 15vh;
     text-align: center;
 }
 
@@ -96,9 +107,6 @@ section.sec1 h1 a:hover{
     transition: .5s;
 }
 
-section.sec1 p{
-    font-size:
-}
 section.sec2{
     width: 100%;
     height: 100vh;
@@ -184,6 +192,7 @@ section.sec3
     transition:0.5s;
     color:white;
     text-align:center;
+    font-weight: bold;
 }
 
 footer {
@@ -202,17 +211,16 @@ footer {
 }
 
 #slider{
-    position:relative;
-    padding-top: 20vh;
-    margin: auto;
-    width: 100%;
-    padding-bottom: 20px;
-    z-index:2;
+    border: 1px solid white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    box-shadow: 3px 3px 2px 1px rgba(0, 0, 0, .2);
 }
 
 #destCanvas{
-    margin: auto;
-    width: 25%;
+    margin: 10px;;
+    width: 250px;
+    height:100px;
 }
 
 #canvas{
@@ -226,10 +234,12 @@ footer {
 #resa input{
     margin-top:5px;
     margin:auto;
+    font-weight: bold;
 }
 
 input{
     font-family: 'Roboto', sans-serif;
+    font-weight: bold;
     background-color: white;
     padding: 5px 20px;
     text-transform: uppercase;
@@ -240,4 +250,25 @@ input{
 input:hover{
     color: #fff;
     background:#f00;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: rgba(255,0,0,.8);
+    color: white;
+    text-align: center;
+    z-index:3;
+    display : flex;
+    justify-content:space-evenly;
+}
+
+.footer #compteARebours{
+    margin:auto;
+}
+
+.footer #reservationEnCours{
+    margin:auto;
 }

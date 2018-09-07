@@ -1,82 +1,77 @@
 <!doctype html>
 
 <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Velov</title>
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>Velov</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-</head>
-    
-<body>
-   <nav>
-       <div class="logo">
-           <img src="../images/logo.png">
-       </div>
-       <ul>
-           <li><a href="#" class="active">Accueil</a></li>
-           <li><a href="#sec2">Aide</a></li>
-           <li><a href="#sec3">Réserver</a></li>
-       </ul>
-   </nav>
-   <header class="v-header container">
-        <div class="fullscreen-video-wrap">
-            <video autoplay="true" loop="true" preload="auto" muted=”true”>
-              <source src="../images/velofilm.mp4" type="video/mp4">
-            </video>
+    <body>
+       <nav>
+           <div class="logo">
+               <img src="../images/logo.png">
+           </div>
+           <ul>
+               <li><a href="#" class="active">Accueil</a></li>
+               <li><a href="#">Aide</a></li>
+               <li><a href="#sec3">Réserver</a></li>
+           </ul>
+       </nav>
+       <header class="v-header container">
+            <div class="fullscreen-video-wrap">
+                <video autoplay="true" loop="true" preload="auto" muted=”true”>
+                    <source src="../images/velofilm.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="header-overlay"></div>
+            <div class="header-content">
+                <section class="sec1">
+                    <h1 id="introduction"> <a href="#sec3">Réserver</a> un vélo à Lyon <span><a class="info" href="#sec2"><i class="fas fa-info-circle"></i></a></span></h1>
+                    <div id="slider">
+                        <img name="slide" width="450" height="500" />
+                        <form id="resa"> 
+                            <input type="button" value="Précedent" id="prec">
+                            <input type="button" value="Suivant" id="suiv">
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </header>
+        <section class="sec3" id="sec3">
+            <div id="map"></div>
+            <div id="etatstation">
+                <h2 id="nomStation"></h2>
+                <p>Adresse : <span id="adresse"></span></p>
+                <p>Nombre de places : <span id="nombreDePlaces"></span></p>
+                <p>Vélos disponibles : <span id="placesDisponibles"></span></p>
+                <p>Signature :</p>
+                <canvas id="canvas" width="250" height="100">
+                </canvas>
+                <form id="resa"> 
+                  <input type="button" value="Réservation" id="reservation">
+                  <input type="button" value="Annuler" id="annuler">
+                </form>
+            </div>
+        </section>
+        <div class="footer" style="display="none>
+            <div id="reservationEnCours"></div>
+            <div id="compteARebours"></div>
+            <div> 
+                <canvas id="destCanvas" width="250" height="100">
+                </canvas>
+            </div>
         </div>
-        <div class="header-overlay"></div>
-        <div class="header-content">
-    <section class="sec1">
-        <h1 id="introduction"> <a href="#sec3">Réservez</a> un vélo à Lyon <span><a class="info" href="#sec2"><i class="fas fa-info-circle"></i></a></span></h1>
-        <p id="reservationEnCours"></p>
-        <p id="compteARebours"></p>
-        <p> <canvas id="destCanvas" width="250" height="100">
-        </canvas></p>
-    </section>
-        </div>
-            </header>
-
-
-    <section class="sec2" id="sec2">
-        <div id="slider">
-            <img name="slide" width="400" height="200" />
-            <form id="resa"> 
-                <input type="button" value="Précedent" id="prec">
-                <input type="button" value="Suivant" id="suiv">
-            </form>
-        </div>
-    </section>
-    <section class="sec3" id="sec3">
-    <div id="map"></div>
-    <div id="etatstation">
-        <h2 id="nomStation"></h2>
-        <p>Adresse : <span id="adresse"></span></p>
-        <p>Nombre de places : <span id="nombreDePlaces"></span></p>
-        <p>Vélos disponibles : <span id="placesDisponibles"></span></p>
-        <p>Signature :</p>
-        <canvas id="canvas" width="250" height="100">
-        </canvas>
-        <form id="resa"> 
-          <a href="#" style="text-decoration: none"><input type="button" value="Réservation" id="reservation"></a>
-          <input type="button" value="Annuler" id="annuler">
-        </form>
-    </div>
-    </section>
         <!--velov.js!-->
-    <script src="../js/canvas.js"></script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdFj59goa62jO2ElaHUegBiK4RYk7Ai9s&callback=init
-">
-    </script>
-    <script src="../js/markerclusterer.js"></script>
-    <!--Inclure jquerry!-->
-    <script src="../js/jquery-3.3.1.min.js"></script>
-    <!--velov.js!-->
-    <!--<script src="../js/velov.js"></script>!-->
-    <script src="../js/velovObjet.js"></script>
-    <script src="../js/slider.js"></script>
-</body>
-    
+        
+        <script src="../js/canvas.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDdFj59goa62jO2ElaHUegBiK4RYk7Ai9s&callback=init"></script>
+        <script src="../js/markerclusterer.js"></script>
+        <!--Inclure jquerry!-->
+        <script src="../js/jquery-3.3.1.min.js"></script>
+        <script src="../js/nav.js"></script>
+        <script src="../js/velovObjet.js"></script>
+        <script src="../js/slider.js"></script>
+    </body>
 </html>

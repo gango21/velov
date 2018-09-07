@@ -1,13 +1,13 @@
 var compteur = 0; 			// Start Point
 var images = [];	// Images Array
-var time = 9000;	// Time Between Switch
+var time = 15000;	// Time Between Switch
 var suivant = document.getElementById("suiv") //bouton suivant
 var precedent = document.getElementById("prec") //bouton précédent
 	 
 // Image List
-images[0] = "../images/image1.png";
-images[1] = "../images/image2.png";
-images[2] = "../images/image3.png";
+images[0] = "../images/image1.gif";
+images[1] = "../images/image2.gif";
+images[2] = "../images/image3.gif";
 
 // Change Image
 function changeImg(){
@@ -38,8 +38,7 @@ suivant.addEventListener('click', function(){
         // Reset Back To O
         compteur = 0;
     }
-    document.slide.src = images[compteur];
-    console.log("suivant" + compteur)    
+    document.slide.src = images[compteur];  
 })
    
 //Change Image bouton précédent
@@ -53,7 +52,6 @@ precedent.addEventListener('click', function(){
         // Reset To End
         compteur = images.length-1;
     }
-    console.log("precedent" + compteur)
     document.slide.src = images[compteur];
 })
 
@@ -70,8 +68,7 @@ function checkKeyPressed(e) {
             // Reset Back To O
             compteur = 0;
         }
-        document.slide.src = images[compteur];
-        console.log("suivant" + compteur)    
+        document.slide.src = images[compteur];  
     } else if (e.keyCode == "37") {
         // Check If Index Is Over Min
         if(compteur > 0){
@@ -81,7 +78,6 @@ function checkKeyPressed(e) {
             // Reset To End
             compteur = images.length-1;
         }
-        console.log("precedent" + compteur)
         document.slide.src = images[compteur];
     }
 }

@@ -1,24 +1,23 @@
-var buttonResvervation = document.getElementById("reservation")
-var buttonAnnulation = document.getElementById("annuler")
-var nomStation = document.getElementById("nomStation")
-var adresseStation = document.getElementById("adresse")
-var nombreDePlaces = document.getElementById("nombreDePlaces")
-var placesDisponiblesStation = document.getElementById("placesDisponibles")
-var reservationEnCours = document.getElementById("reservationEnCours")
-var compteARebours = document.getElementById("compteARebours")
-var checkCompteRebours = null
-var temps = null
+var buttonResvervation = document.getElementById("reservation");
+var buttonAnnulation = document.getElementById("annuler");
+var nomStation = document.getElementById("nomStation");
+var adresseStation = document.getElementById("adresse");
+var nombreDePlaces = document.getElementById("nombreDePlaces");
+var placesDisponiblesStation = document.getElementById("placesDisponibles");
+var reservationEnCours = document.getElementById("reservationEnCours");
+var compteARebours = document.getElementById("compteARebours");
+var checkCompteRebours = null;
+var temps = null;
 
 function init(){
     $.get({
         type: 'GET',
         url: 'https://api.jcdecaux.com/vls/v1/stations?contract=Lyon&apiKey=8107a525c841e0b25de543e35fd372943e7b9f1f',
     }, function(data){
-        var stations = data;
-        console.log(stations)
-        if (stations != undefined){
-            initMap(stations)
-        }    
+            var stations = data;
+            if (stations != undefined){
+                initMap(stations)
+            }    
     })
 }
 
@@ -49,7 +48,7 @@ function initMap(stations){
         marker.addListener('click', function() {
             document.getElementById("etatstation").style.opacity = 1;
             var station = Object.create(Station);
-            station.init(stations[i].name, stations[i].bike_stands, stations[i].available_bikes, stations[i].address)
+            station.init(stations[i].name, stations[i].bike_stands, stations[i].available_bikes, stations[i].address);
             // créer un objet reservation
             buttonResvervation.addEventListener('click', function(){
                 var reservation = Object.create(Reservation);
@@ -61,10 +60,10 @@ function initMap(stations){
                 })
             })
         })
-    return marker
+    return marker;
     });    
     var markerCluster = new MarkerClusterer(map, markers,
-    {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}); //mettre un chemin local ? 
+    {imagePath: '../m/m'}); //mettre un chemin local ? 
 }
 
 // POO
@@ -84,9 +83,9 @@ var Station = {
         // Permettre la réservation si des places sont disponibles
         if (this.placesDisponibles===0) {
             //buttonResvervation.style.display = "none";
-            canvas.style.display = "none"
+            canvas.style.display = "none";
         } else if (this.placesDisponibles>0){
-            canvas.style.display = "block"
+            canvas.style.display = "block";
         }
     }
 }
@@ -95,16 +94,16 @@ var Reservation = {
     //Initialise la reservation
     init: function (station){
         this.station = station;
-        reservationEnCours.innerHTML = " Vous avez réservé un vélo à la station " + this.station
-        buttonAnnulation.value = "Annuler " + this.station
-        canvas.style.display = "none"
+        reservationEnCours.innerHTML = " Vous avez réservé un vélo à la station " + this.station;
+        buttonAnnulation.value = "Annuler " + this.station;
+        canvas.style.display = "none";
         var record = {
             station: this.station,
             tempsExpiration: new Date().getTime() + 20*60*1000,
             signature: dataURL
         }
         localStorage.setItem("reservation", JSON.stringify(record));
-        var checkCompteRebours = setInterval(myTimer,500) //
+        var checkCompteRebours = setInterval(myTimer,500);
     }
 }
 
@@ -118,37 +117,31 @@ var Annulation = {
             tempsExpiration: "annulée"
         }
         localStorage.setItem("reservation", JSON.stringify(record));
-        clearInterval(checkCompteRebours)
-        console.log("Annulation de la reservation")
     }
 }
 
 function myTimer() {
-    var storage = localStorage.getItem("reservation")
-    var localStorageJSON = JSON.parse(storage)
-    var tempsExpiration = localStorageJSON.tempsExpiration
+    var storage = localStorage.getItem("reservation");
+    var localStorageJSON = JSON.parse(storage);
+    var tempsExpiration = localStorageJSON.tempsExpiration;
     var minutesRestantes = tempsExpiration-Date.now();
     if (minutesRestantes>0){
-        var temps = convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
-        console.log(temps)
         compteARebours.innerHTML = "Expiration de la réservation dans " + convertMS(minutesRestantes).m + ":"+ convertMS(minutesRestantes).s;
-        buttonResvervation.style.display = "none"
-        buttonAnnulation.style.display = "block"
-        document.getElementById("introduction").style.display = "none"
+        buttonResvervation.style.display = "none";
+        buttonAnnulation.style.display = "block";
+        document.getElementById("introduction").style.display = "none";
     } else if (tempsExpiration === "annulée") {
         compteARebours.innerHTML = "";   
-        buttonResvervation.style.display = "block"
-        buttonAnnulation.style.display = "none"
-        console.log("annulée")
+        buttonResvervation.style.display = "block";
+        buttonAnnulation.style.display = "none";
+        console.log("annulée");
         location.reload()
     } else if (minutesRestantes<0){
         compteARebours.innerHTML = "Votre réservation est expirée ";
-        buttonResvervation.style.display = "block"
-        buttonAnnulation.style.display = "none"
-        canvas.style.display = "block"
-        clearInterval(checkCompteRebours)
-        console.log("compteàrebours")
-        location.reload()
+        buttonResvervation.style.display = "block";
+        buttonAnnulation.style.display = "none";
+        canvas.style.display = "block";
+        location.reload();
     }   
 }
 
@@ -165,5 +158,5 @@ function convertMS(ms) {
 };
 
 window.addEventListener('unload', function() {
-        localStorage.clear()
+        localStorage.clear();
       });
