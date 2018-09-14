@@ -1,8 +1,8 @@
 var Slider = function() {                                                                     
     compteur = 0;			                                                            // point de départ pour compter les images
     images = ["../images/image1.gif", "../images/image2.gif",  "../images/image3.gif"]; // images tableau
-    suivant = document.getElementById("suiv"),                                          // bouton suivant
-    precedent = document.getElementById("prec"),                                        // bouton précedent
+    suivant = document.getElementById("suiv");                                          // bouton suivant
+    precedent = document.getElementById("prec");                                        // bouton précedent
     
     actualiser = function actualiser(){                                                 // méthode qui actualise la source de l'image
         document.slide.src = images[compteur];
