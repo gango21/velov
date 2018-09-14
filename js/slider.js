@@ -1,86 +1,43 @@
-var compteur = 0; 			// Start Point
-var images = [];	// Images Array
-var time = 15000;	// Time Between Switch
-var suivant = document.getElementById("suiv") //bouton suivant
-var precedent = document.getElementById("prec") //bouton précédent
-	 
-// Image List
-images[0] = "../images/image1.gif";
-images[1] = "../images/image2.gif";
-images[2] = "../images/image3.gif";
-
-// Change Image
-function changeImg(){
+var Slider = function() {                                                                     
+    compteur = 0;			                                                            // point de départ pour compter les images
+    images = ["../images/image1.gif", "../images/image2.gif",  "../images/image3.gif"]; // images tableau
+    suivant = document.getElementById("suiv"),                                          // bouton suivant
+    precedent = document.getElementById("prec"),                                        // bouton précedent
     
-	document.slide.src = images[compteur];
-
-	// Check If Index Is Under Max
-	if(compteur < images.length - 1){
-	  // Add 1 to Index
-	  compteur++; 
-	} else { 
-		// Reset Back To O
-		compteur = 0;
-	}
-
-	// Run function every x seconds
-	setTimeout("changeImg()", time);
-}
-
-//Change Image bouton suivant
-suivant.addEventListener('click', function(){
-            
-    // Check If Index Is Under Max
-    if(compteur < images.length - 1){
-        // Add 1 to Index
-        compteur++; 
-    } else { 
-        // Reset Back To O
-        compteur = 0;
-    }
-    document.slide.src = images[compteur];  
-})
-   
-//Change Image bouton précédent
-precedent.addEventListener('click', function(){
-           
-    // Check If Index Is Over Min
-    if(compteur > 0){
-        // Delete 1 to Index
-        compteur--; 
-    } else { 
-        // Reset To End
-        compteur = images.length-1;
-    }
-    document.slide.src = images[compteur];
-})
-
-//Change keydown
-window.addEventListener("keydown", checkKeyPressed, false);
- 
-function checkKeyPressed(e) {
-    if (e.keyCode == "39") {
-        // Check If Index Is Under Max
-        if(compteur < images.length - 1){
-            // Add 1 to Index
-            compteur++; 
-        } else { 
-            // Reset Back To O
-            compteur = 0;
-        }
-        document.slide.src = images[compteur];  
-    } else if (e.keyCode == "37") {
-        // Check If Index Is Over Min
-        if(compteur > 0){
-            // Delete 1 to Index
-            compteur--; 
-        } else { 
-            // Reset To End
-            compteur = images.length-1;
-        }
+    actualiser = function actualiser(){                                                 // méthode qui actualise la source de l'image
         document.slide.src = images[compteur];
     }
+    sliderPlus = function sliderPlus(){                                                 // méthode qui incrémente d'une image
+        if(compteur < images.length - 1){
+            compteur++; 
+        } else {
+            compteur = 0;
+        }
+        actualiser();  
+    }
+    sliderMoins = function sliderMoints(){                                              // méthode qui décrémente d'une image
+        if (compteur>0){
+            compteur--;
+        } else {
+            compteur = images.length-1;
+        }
+        actualiser();
+    }
+    
+    setInterval(sliderPlus,15000);                                                      // incrémente toutes les 15 secondes
+    suivant.addEventListener('click', sliderPlus);                                      // événement incrémente au clic sur le bouton suivant
+    precedent.addEventListener('click', sliderMoins);                                   // événement décrémente au clic sur le bouton précédent
+    
+    checkKeyPressed = function checkKeyPressed(e){                                      // méthode changement d'image au clavier
+        if (e.keyCode == "39") {
+            sliderPlus();
+            actualiser();
+        } else if (e.keyCode == "37") {
+            sliderMoins();
+            actualiser();
+        }
+    }
+    window.addEventListener("keydown", checkKeyPressed, false);                         // événement changement d'image au clavier                         
 }
 
-// Run function when page loads
-window.onload=changeImg;
+var slider1 = new Slider                                                                // instanciation d'un objet slider1
